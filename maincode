@@ -1,0 +1,144 @@
+# File: pythagorean_theorem_tool.py
+import tkinter as tk
+from tkinter import messagebox
+import random
+import math
+
+# Main Application
+class PythagoreanTheoremApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Pythagorean Theorem Explorer")
+        self.root.geometry("600x500")
+        self.root.config(bg="#f0f8ff")
+        
+        # Title Label
+        self.title_label = tk.Label(
+            root, text="Pythagorean Theorem Explorer",
+            font=("Arial", 18, "bold"), bg="#f0f8ff", fg="#333"
+        )
+        self.title_label.pack(pady=10)
+
+        # Tabs: Calculator | Quiz | Game
+        self.create_tabs()
+
+    def create_tabs(self):
+        # Notebook for tabs
+        self.tabs = tk.Frame(self.root, bg="#f0f8ff")
+        self.tabs.pack(fill="both", expand=True)
+
+        # Buttons for tabs
+        tk.Button(self.tabs, text="Calculator", width=20, command=self.show_calculator).grid(row=0, column=0, padx=5, pady=10)
+        tk.Button(self.tabs, text="Quiz", width=20, command=self.show_quiz).grid(row=0, column=1, padx=5, pady=10)
+        tk.Button(self.tabs, text="Game", width=20, command=self.show_game).grid(row=0, column=2, padx=5, pady=10)
+
+    def show_calculator(self):
+        CalculatorWindow(self.root)
+
+    def show_quiz(self):
+        QuizWindow(self.root)
+
+    def show_game(self):
+        GameWindow(self.root)
+
+class CalculatorWindow:
+    def __init__(self, root):
+        self.window = tk.Toplevel(root)
+        self.window.title("Pythagorean Calculator")
+        self.window.geometry("400x300")
+        self.window.config(bg="#f0f8ff")
+        
+        # Calculator Interface
+        tk.Label(self.window, text="Enter side lengths:", bg="#f0f8ff", font=("Arial", 14)).pack(pady=10)
+        self.a_entry = tk.Entry(self.window, width=10)
+        self.a_entry.pack(pady=5)
+        self.b_entry = tk.Entry(self.window, width=10)
+        self.b_entry.pack(pady=5)
+        
+        self.calculate_button = tk.Button(
+            self.window, text="Calculate Hypotenuse", command=self.calculate_hypotenuse, bg="#add8e6"
+        )
+        self.calculate_button.pack(pady=10)
+
+        self.result_label = tk.Label(self.window, text="", bg="#f0f8ff", font=("Arial", 14, "bold"))
+        self.result_label.pack(pady=10)
+
+    def calculate_hypotenuse(self):
+        try:
+            a = float(self.a_entry.get())
+            b = float(self.b_entry.get())
+            c = math.sqrt(a**2 + b**2)
+            self.result_label.config(text=f"Hypotenuse (c): {c:.2f}")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter valid numbers.")
+
+class QuizWindow:
+    def __init__(self, root):
+        self.window = tk.Toplevel(root)
+        self.window.title("Pythagorean Quiz")
+        self.window.geometry("400x300")
+        self.window.config(bg="#f0f8ff")
+        self.generate_question()
+        
+        self.question_label = tk.Label(self.window, text="", font=("Arial", 14), bg="#f0f8ff")
+        self.question_label.pack(pady=10)
+
+        self.answer_entry = tk.Entry(self.window, width=20)
+        self.answer_entry.pack(pady=10)
+
+        self.submit_button = tk.Button(
+            self.window, text="Submit", command=self.check_answer, bg="#add8e6"
+        )
+        self.submit_button.pack(pady=10)
+
+        self.result_label = tk.Label(self.window, text="", font=("Arial", 12), bg="#f0f8ff")
+        self.result_label.pack(pady=10)
+
+    def generate_question(self):
+        self.a = random.randint(1, 20)
+        self.b = random.randint(1, 20)
+        self.c = math.sqrt(self.a**2 + self.b**2)
+        self.answer = round(self.c, 2)
+        self.question_label.config(text=f"Find the hypotenuse for a={self.a}, b={self.b}")
+
+    def check_answer(self):
+        try:
+            user_answer = float(self.answer_entry.get())
+            if abs(user_answer - self.answer) < 0.01:
+                self.result_label.config(text="Correct!", fg="green")
+            else:
+                self.result_label.config(text=f"Incorrect. The answer was {self.answer:.2f}.", fg="red")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid number.")
+
+class GameWindow:
+    def __init__(self, root):
+        self.window = tk.Toplevel(root)
+        self.window.title("Pythagorean Game")
+        self.window.geometry("400x300")
+        self.window.config(bg="#f0f8ff")
+        self.initiate_game()
+        
+    def initiate_game(self):
+        tk.Label(
+            self.window, text="Find the Missing Side Game!", font=("Arial", 16, "bold"), bg="#f0f8ff"
+        ).pack(pady=10)
+        
+        self.result_label = tk.Label(self.window, text="", font=("Arial", 12), bg="#f0f8ff")
+        self.result_label.pack(pady=10)
+
+        self.play_button = tk.Button(
+            self.window, text="Start Game", command=self.start_game, bg="#add8e6"
+        )
+        self.play_button.pack(pady=10)
+
+    def start_game(self):
+        self.result_label.config(text="Game Starting...")
+        # Add game logic here in future
+
+
+# Run the application
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = PythagoreanTheoremApp(root)
+    root.mainloop()
